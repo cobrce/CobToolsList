@@ -107,14 +107,16 @@ namespace CobToolsList
             List<Item> Items = Settings.Load();
             files = (from Item i in Items select i.path).ToList();
             ImageList list = new ImageList() { ImageSize = SystemInformation.IconSize, ColorDepth = ColorDepth.Depth32Bit };
+            ImageList smalllist = new ImageList() { ImageSize = SystemInformation.SmallIconSize, ColorDepth = ColorDepth.Depth32Bit };
             foreach (Item item in Items)
             {
                 Icon icon = Icon.ExtractAssociatedIcon(item.path);
                 list.Images.Add(icon);
+                smalllist.Images.Add(icon);
                 listView1.Items.Add(new ListViewItem(item.label, list.Images.Count - 1) { Tag = item.path });
             }
             listView1.LargeImageList = list;
-            listView1.SmallImageList = list;           
+            listView1.SmallImageList = smalllist;           
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -128,6 +130,7 @@ namespace CobToolsList
                     files.Add(file);
                     Icon icon = Icon.ExtractAssociatedIcon(file);
                     ImageList list = listView1.LargeImageList;
+                    listView1.SmallImageList.Images.Add(icon);
                     list.Images.Add(icon);
                     listView1.Items.Add(new ListViewItem(Path.GetFileNameWithoutExtension(file), list.Images.Count - 1) { Tag = file });
                 }
