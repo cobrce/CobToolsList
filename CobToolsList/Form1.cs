@@ -151,7 +151,6 @@ namespace CobToolsList
         private void button3_Click(object sender, EventArgs e)
         {
             listView1.Sort();
-
         }
         
         private void button2_Click(object sender, EventArgs e)
@@ -179,6 +178,17 @@ namespace CobToolsList
                 process.Start();
                 Close();
             }
+        }
+
+        private void checkBox1_Paint(object sender, PaintEventArgs e)
+        {
+            Rectangle rect = new Rectangle(0, 5, 10, 10);
+            
+            e.Graphics.Clear(checkBox1.BackColor);
+            e.Graphics.DrawEllipse(Pens.DodgerBlue,rect);
+            if (checkBox1.Checked)
+                e.Graphics.FillEllipse(Brushes.DodgerBlue, rect);
+            e.Graphics.DrawString(checkBox1.Text, checkBox1.Font, Brushes.DodgerBlue, new PointF(15, 2));
         }
 
     }

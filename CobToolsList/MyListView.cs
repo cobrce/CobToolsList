@@ -17,6 +17,7 @@ namespace CobToolsList
 
         private Point MouseLocation = Point.Empty;
         private Rectangle rect = Rectangle.Empty;
+        private int ItemIndex;
 
         public MyListView()
         {
@@ -75,6 +76,21 @@ namespace CobToolsList
                 if (ctrl)
                     this.View = System.Windows.Forms.View.SmallIcon;
                 else SendMessage(this.Handle, (uint)WM_HSCROLL, (System.UIntPtr)ScrollEventType.SmallIncrement, (System.IntPtr)0); // todo : manual scroll; // todo : manual scroll
+            if (!ctrl)
+            {
+                int index = ItemFromLocation(this.PointToClient(MousePosition));
+
+                if (index!=-1)
+                    ItemIndex = index;
+                Rectangle temprect = GetItemRect(ItemIndex);
+                if (rect!=temprect)
+                {
+                    rect = temprect;
+                    Invalidate();
+                    Application.DoEvents();
+                    Draw();
+                }
+            }
             //base.OnMouseWheel(e);
         }
         #endregion
@@ -116,17 +132,29 @@ namespace CobToolsList
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
+
+            int index = ItemFromLocation(e.Location);
+            if (index == -1) return;
+            Rectangle tempRect = GetItemRect(index); ;// GetItemRect(i);
+            if (tempRect != rect)
+            {
+                ItemIndex = index;
+                Invalidate();
+                Application.DoEvents();
+                rect = tempRect;
+                Draw();
+            }
+        }
+
+        private int ItemFromLocation(Point point)
+        {
             for (int i = 0; i < Items.Count; i++)
             {
-                Rectangle tempRect = GetItemRect(i);
-                if (tempRect.Contains(e.Location) && tempRect != rect)
-                {
-                    Invalidate();
-                    Application.DoEvents();
-                    rect = tempRect;
-                    Draw();
-                }
+                Rectangle rect = GetItemRect(i);
+                if (rect.Contains(point))
+                    return i;
             }
+            return -1;
         }
 
         private void Draw()
