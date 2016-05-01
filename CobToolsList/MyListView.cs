@@ -31,6 +31,11 @@ namespace CobToolsList
                 Draw();
             }
         }
+        protected override void OnMouseEnter(EventArgs e)
+        {
+            this.Select();
+            base.OnMouseEnter(e);
+        }
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
@@ -50,7 +55,7 @@ namespace CobToolsList
         private void Draw()
         {
             Graphics g = Graphics.FromHwnd(this.Handle);
-            Brush HighLight = new LinearGradientBrush(rect, Color.FromArgb(40, Color.White), Color.Transparent, 90.0f);
+            Brush HighLight = new LinearGradientBrush(rect, Color.FromArgb(20, Color.White), Color.Transparent, 90.0f);
             g.FillRectangle(HighLight, rect);
         }
     }

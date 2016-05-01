@@ -36,15 +36,25 @@ namespace CobToolsList
 
             
         }
+        [System.Runtime.InteropServices.DllImport("User32.dll")]
+        public static extern IntPtr GetWindowDC(IntPtr hWnd);
         protected override void WndProc(ref Message m)
         {
-            const int WM_NCHITTEST = 0x0084
-                ;
+            const int WM_NCHITTEST = 0x0084;
+            const int WM_NCPAINT = 0x0085;
             //const int WM_SYSCOMMAND=0x0112;
             //const int SC_VSCROLL=0xF070;
 
             if (m.Msg == WM_NCHITTEST)
                 return;
+            else if (m.Msg == WM_NCPAINT)
+            {
+                IntPtr DC = GetWindowDC(Handle);
+                Graphics g = Graphics.FromHdc(DC);
+                g.Clear(Color.FromArgb(0x22, 0x22, 0x22));
+                g.Flush();
+                return;
+            }
             base.WndProc(ref m);
         }
 
@@ -168,9 +178,5 @@ namespace CobToolsList
             }
         }
 
-        private void listView1_DoubleClick(object sender, EventArgs e)
-        {
-
-        }
     }
 }
