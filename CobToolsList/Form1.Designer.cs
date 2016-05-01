@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.label1 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.label1 = new System.Windows.Forms.Label();
             this.listView1 = new CobToolsList.MyListView();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -65,6 +65,15 @@
             this.splitContainer1.Size = new System.Drawing.Size(859, 118);
             this.splitContainer1.SplitterDistance = 31;
             this.splitContainer1.TabIndex = 1;
+            // 
+            // label1
+            // 
+            this.label1.Location = new System.Drawing.Point(79, 4);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(627, 23);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "COB Tools List";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // button3
             // 
@@ -109,19 +118,6 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.Title = "Select file to add";
-            // 
-            // label1
-            // 
-            this.label1.Location = new System.Drawing.Point(79, 4);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(627, 23);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "COB Tools List";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // listView1
             // 
             this.listView1.Alignment = System.Windows.Forms.ListViewAlignment.Left;
@@ -130,11 +126,16 @@
             this.listView1.Location = new System.Drawing.Point(0, 0);
             this.listView1.MultiSelect = false;
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(859, 142);
+            this.listView1.Scrollable = false;
+            this.listView1.Size = new System.Drawing.Size(859, 83);
             this.listView1.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.Click += new System.EventHandler(this.listView1_Click);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.Title = "Select file to add";
             // 
             // Form1
             // 
