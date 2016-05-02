@@ -10,16 +10,45 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Threading;
+using System.IO.MemoryMappedFiles;
+using System.Runtime.InteropServices;
 
 namespace CobToolsList
 {
     public partial class Form1 : Form
     {
+        MemoryMappedFile mapfile;
+        MemoryMappedViewAccessor accessor;
         List<string> files = new List<string>();
         private bool close = true;
+        private static int WM_SHOWME = RegisterWindowMessage("WM_SHOWME");
+
+        [DllImport("user32")]
+        public static extern int RegisterWindowMessage(string message);
+        [DllImport("user32.dll")]
+        static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, UIntPtr wParam, IntPtr lParam);
+
         public Form1()
         {
             InitializeComponent();
+
+            mapfile = MemoryMappedFile.CreateOrOpen("CobToolsListMapFile", 8);
+            accessor = mapfile.CreateViewAccessor();
+            int hWND = accessor.ReadInt32(0);
+            if (hWND != 0)
+            {
+                SendMessage((IntPtr)hWND, (uint)WM_SHOWME, UIntPtr.Zero, IntPtr.Zero);
+                Environment.Exit(0);
+            }
+            else
+                accessor.Write(0, this.Handle.ToInt32());
+
+            ContextMenu menu = new ContextMenu();
+            menu.MenuItems.Add(new MenuItem("Exit", new EventHandler((o, e) => { notifyIcon1.Dispose(); Environment.Exit(0); })));
+            notifyIcon1.ContextMenu = menu;
+            notifyIcon1.Visible = true;
+
             this.Text = string.Empty;
             this.ControlBox = false;
             Opacity = 0.90;
@@ -33,18 +62,20 @@ namespace CobToolsList
             }
             listView1.BackColor = Color.FromArgb(0x11, 0x11, 0x11);
             listView1.ForeColor = Color.DodgerBlue;
-
-            
         }
         [System.Runtime.InteropServices.DllImport("User32.dll")]
         public static extern IntPtr GetWindowDC(IntPtr hWnd);
-        protected override void WndProc(ref Message m)
+        
+        protected override void WndProc(ref System.Windows.Forms.Message m)
         {
             const int WM_NCHITTEST = 0x0084;
             const int WM_NCPAINT = 0x0085;
-            //const int WM_SYSCOMMAND=0x0112;
-            //const int SC_VSCROLL=0xF070;
-
+            if (m.Msg == WM_SHOWME)
+            {
+                Show();
+                BringToFront();
+                Activate();
+            }
             if (m.Msg == WM_NCHITTEST)
                 return;
             else if (m.Msg == WM_NCPAINT)
@@ -90,13 +121,17 @@ namespace CobToolsList
         private void Form1_Deactivate(object sender, EventArgs e)
         {
             if (close && !checkBox1.Checked)
-                Close();
+                this.Hide();
+                //this.WindowState = FormWindowState.Minimized;
+                //Close();
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
-                Close();
+                this.Hide();
+            //this.WindowState = FormWindowState.Minimized;
+            //Close();
             else if (e.KeyCode == Keys.Enter)
                 listView1_Click(null, null);
         }
@@ -147,12 +182,7 @@ namespace CobToolsList
             }
             Settings.Save(itms);
         }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            listView1.Sort();
-        }
-        
+                
         private void button2_Click(object sender, EventArgs e)
         {
             if (listView1.SelectedItems!=null && listView1.SelectedItems.Count>0)
@@ -173,23 +203,23 @@ namespace CobToolsList
             if (listView1.SelectedItems!=null && listView1.SelectedItems.Count>0)
             {
                 this.Hide();
+                //this.WindowState = FormWindowState.Minimized;
                 Process process = new Process();
                 process.StartInfo = new ProcessStartInfo(listView1.SelectedItems[0].Tag.ToString()) { UseShellExecute = true};
                 process.Start();
-                Close();
+                //Close();
             }
         }
 
         private void checkBox1_Paint(object sender, PaintEventArgs e)
         {
             Rectangle rect = new Rectangle(0, 5, 10, 10);
-            
+            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             e.Graphics.Clear(checkBox1.BackColor);
             e.Graphics.DrawEllipse(Pens.DodgerBlue,rect);
             if (checkBox1.Checked)
                 e.Graphics.FillEllipse(Brushes.DodgerBlue, rect);
             e.Graphics.DrawString(checkBox1.Text, checkBox1.Font, Brushes.DodgerBlue, new PointF(15, 2));
-        }
-
+        }      
     }
 }

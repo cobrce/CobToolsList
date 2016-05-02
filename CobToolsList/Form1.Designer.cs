@@ -28,12 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.label1 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.button2 = new CobToolsList.MyButton();
+            this.button1 = new CobToolsList.MyButton();
             this.listView1 = new CobToolsList.MyListView();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -84,12 +87,21 @@
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.checkBox1_Paint);
             // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.Title = "Select file to add";
+            // 
+            // notifyIcon1
+            // 
+            this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
+            this.notifyIcon1.Text = "Cob Tools List";
+            // 
             // button2
             // 
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Location = new System.Drawing.Point(41, 4);
+            this.button2.Location = new System.Drawing.Point(25, 6);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(32, 26);
+            this.button2.Size = new System.Drawing.Size(20, 20);
             this.button2.TabIndex = 1;
             this.button2.Text = "-";
             this.button2.UseVisualStyleBackColor = true;
@@ -98,17 +110,13 @@
             // button1
             // 
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Location = new System.Drawing.Point(3, 4);
+            this.button1.Location = new System.Drawing.Point(3, 6);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(32, 26);
+            this.button1.Size = new System.Drawing.Size(20, 20);
             this.button1.TabIndex = 1;
             this.button1.Text = "+";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.Title = "Select file to add";
             // 
             // listView1
             // 
@@ -130,7 +138,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(859, 118);
             this.Controls.Add(this.splitContainer1);
+            this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -156,11 +166,12 @@
 
         private MyListView listView1;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private MyButton button1;
+        private MyButton button2;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.NotifyIcon notifyIcon1;
     }
 }
 

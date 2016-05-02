@@ -22,6 +22,7 @@ namespace CobToolsList
         public MyListView()
         {
             InitializeComponent();
+            DoubleBuffered = true;
         }
 
         #region Hide scrollbar / Credit : http://stackoverflow.com/a/2500089/5822322
