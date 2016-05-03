@@ -33,6 +33,9 @@ namespace CobToolsList
         {
             InitializeComponent();
 
+            listView1.Size1 = new Size(859, 123);
+            listView1.Size2 = new Size(859, 83);
+
             mapfile = MemoryMappedFile.CreateOrOpen("CobToolsListMapFile", 8);
             accessor = mapfile.CreateViewAccessor();
             int hWND = accessor.ReadInt32(0);
@@ -45,7 +48,7 @@ namespace CobToolsList
                 accessor.Write(0, this.Handle.ToInt32());
 
             ContextMenu menu = new ContextMenu();
-            menu.MenuItems.Add(new MenuItem("Exit", new EventHandler((o, e) => { notifyIcon1.Dispose(); Environment.Exit(0); })));
+            menu.MenuItems.Add(new MenuItem("Exit", new EventHandler((o, e) => { notifyIcon1.Dispose(); this.Close(); })));
             notifyIcon1.ContextMenu = menu;
             notifyIcon1.Visible = true;
 
@@ -65,7 +68,7 @@ namespace CobToolsList
         }
         [System.Runtime.InteropServices.DllImport("User32.dll")]
         public static extern IntPtr GetWindowDC(IntPtr hWnd);
-        
+
         protected override void WndProc(ref System.Windows.Forms.Message m)
         {
             const int WM_NCHITTEST = 0x0084;
@@ -75,6 +78,7 @@ namespace CobToolsList
                 Show();
                 BringToFront();
                 Activate();
+                listView1.Focus();
             }
             if (m.Msg == WM_NCHITTEST)
                 return;
@@ -122,8 +126,8 @@ namespace CobToolsList
         {
             if (close && !checkBox1.Checked)
                 this.Hide();
-                //this.WindowState = FormWindowState.Minimized;
-                //Close();
+            //this.WindowState = FormWindowState.Minimized;
+            //Close();
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
@@ -151,7 +155,7 @@ namespace CobToolsList
                 listView1.Items.Add(new ListViewItem(item.label, list.Images.Count - 1) { Tag = item.path });
             }
             listView1.LargeImageList = list;
-            listView1.SmallImageList = smalllist;           
+            listView1.SmallImageList = smalllist;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -182,10 +186,10 @@ namespace CobToolsList
             }
             Settings.Save(itms);
         }
-                
+
         private void button2_Click(object sender, EventArgs e)
         {
-            if (listView1.SelectedItems!=null && listView1.SelectedItems.Count>0)
+            if (listView1.SelectedItems != null && listView1.SelectedItems.Count > 0)
             {
                 close = false;
                 if (MessageBox.Show("Delete selected item?", "Sure?", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
@@ -200,12 +204,12 @@ namespace CobToolsList
 
         private void listView1_Click(object sender, EventArgs e)
         {
-            if (listView1.SelectedItems!=null && listView1.SelectedItems.Count>0)
+            if (listView1.SelectedItems != null && listView1.SelectedItems.Count > 0)
             {
                 this.Hide();
                 //this.WindowState = FormWindowState.Minimized;
                 Process process = new Process();
-                process.StartInfo = new ProcessStartInfo(listView1.SelectedItems[0].Tag.ToString()) { UseShellExecute = true};
+                process.StartInfo = new ProcessStartInfo(listView1.SelectedItems[0].Tag.ToString()) { UseShellExecute = true };
                 process.Start();
                 //Close();
             }
@@ -216,10 +220,10 @@ namespace CobToolsList
             Rectangle rect = new Rectangle(0, 5, 10, 10);
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             e.Graphics.Clear(checkBox1.BackColor);
-            e.Graphics.DrawEllipse(Pens.DodgerBlue,rect);
+            e.Graphics.DrawEllipse(Pens.DodgerBlue, rect);
             if (checkBox1.Checked)
                 e.Graphics.FillEllipse(Brushes.DodgerBlue, rect);
             e.Graphics.DrawString(checkBox1.Text, checkBox1.Font, Brushes.DodgerBlue, new PointF(15, 2));
-        }      
+        }
     }
 }
