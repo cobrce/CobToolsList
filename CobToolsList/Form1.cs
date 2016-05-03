@@ -149,10 +149,11 @@ namespace CobToolsList
             ImageList smalllist = new ImageList() { ImageSize = SystemInformation.SmallIconSize, ColorDepth = ColorDepth.Depth32Bit };
             foreach (Item item in Items)
             {
+                if (!File.Exists(item.path)) continue;
                 Icon icon = Icon.ExtractAssociatedIcon(item.path);
                 list.Images.Add(icon);
                 smalllist.Images.Add(icon);
-                listView1.Items.Add(new ListViewItem(item.label, list.Images.Count - 1) { Tag = item.path });
+                listView1.Items.Add(new ListViewItem(item.label, list.Images.Count - 1) { Tag = item });
             }
             listView1.LargeImageList = list;
             listView1.SmallImageList = smalllist;
@@ -171,7 +172,7 @@ namespace CobToolsList
                     ImageList list = listView1.LargeImageList;
                     listView1.SmallImageList.Images.Add(icon);
                     list.Images.Add(icon);
-                    listView1.Items.Add(new ListViewItem(Path.GetFileNameWithoutExtension(file), list.Images.Count - 1) { Tag = file });
+                    listView1.Items.Add(new ListViewItem(Path.GetFileNameWithoutExtension(file), list.Images.Count - 1) { Tag = new Item(file) });
                 }
             }
             close = true;
@@ -182,7 +183,7 @@ namespace CobToolsList
             List<Item> itms = new List<Item>();
             foreach (ListViewItem item in listView1.Items)
             {
-                itms.Add(new Item() { label = item.Text, path = item.Tag.ToString() });
+                itms.Add((Item) item.Tag);
             }
             Settings.Save(itms);
         }
@@ -196,7 +197,7 @@ namespace CobToolsList
                 {
                     ListViewItem lvm = listView1.SelectedItems[0];
                     lvm.Remove();
-                    files.Remove(lvm.Tag.ToString());
+                    files.Remove((lvm.Tag as Item).path);
                 }
                 close = true;
             }
@@ -209,7 +210,10 @@ namespace CobToolsList
                 this.Hide();
                 //this.WindowState = FormWindowState.Minimized;
                 Process process = new Process();
-                process.StartInfo = new ProcessStartInfo(listView1.SelectedItems[0].Tag.ToString()) { UseShellExecute = true };
+                Item item = (Item)listView1.SelectedItems[0].Tag;
+                process.StartInfo.WorkingDirectory = item.directory;
+                process.StartInfo.UseShellExecute = true;
+                process.StartInfo = new ProcessStartInfo(item.path,item.args);
                 process.Start();
                 //Close();
             }
