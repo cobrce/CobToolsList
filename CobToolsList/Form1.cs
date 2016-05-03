@@ -211,9 +211,11 @@ namespace CobToolsList
                 //this.WindowState = FormWindowState.Minimized;
                 Process process = new Process();
                 Item item = (Item)listView1.SelectedItems[0].Tag;
+
                 process.StartInfo.WorkingDirectory = item.directory;
-                process.StartInfo.UseShellExecute = true;
-                process.StartInfo = new ProcessStartInfo(item.path,item.args);
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.FileName = item.path;
+                process.StartInfo.Arguments = item.args;
                 process.Start();
                 //Close();
             }
