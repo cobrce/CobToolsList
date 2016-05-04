@@ -76,7 +76,6 @@ namespace CobToolsList
             if (m.Msg == WM_SHOWME)
             {
                 Show();
-                BringToFront();
                 Activate();
                 listView1.Focus();
             }

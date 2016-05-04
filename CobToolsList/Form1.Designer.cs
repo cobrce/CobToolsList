@@ -33,11 +33,11 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.label1 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.button2 = new CobToolsList.MyButton();
             this.button1 = new CobToolsList.MyButton();
             this.listView1 = new CobToolsList.MyListView();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -87,15 +87,6 @@
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.checkBox1_Paint);
             // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.Title = "Select file to add";
-            // 
-            // notifyIcon1
-            // 
-            this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
-            this.notifyIcon1.Text = "Cob Tools List";
-            // 
             // button2
             // 
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -125,11 +116,21 @@
             this.listView1.Location = new System.Drawing.Point(0, 0);
             this.listView1.MultiSelect = false;
             this.listView1.Name = "listView1";
+            this.listView1.OwnerDraw = true;
             this.listView1.Size = new System.Drawing.Size(859, 123);
             this.listView1.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.Click += new System.EventHandler(this.listView1_Click);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.Title = "Select file to add";
+            // 
+            // notifyIcon1
+            // 
+            this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
+            this.notifyIcon1.Text = "Cob Tools List";
             // 
             // Form1
             // 
@@ -149,6 +150,7 @@
             this.Text = "Form1";
             this.TopMost = true;
             this.Deactivate += new System.EventHandler(this.Form1_Deactivate);
+            this.LostFocus += new System.EventHandler(this.Form1_Deactivate);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
