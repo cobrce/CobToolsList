@@ -17,15 +17,71 @@ namespace CobToolsList
 
         private Point MouseLocation = Point.Empty;
         private Rectangle rect = Rectangle.Empty;
-        private int ItemIndex;
+        private int ItemIndex = -1;
         public Size Size1;
         public Size Size2;
+        private Color DarkColor = Color.FromArgb(0x22, 0x22, 0x22);
 
         public MyListView()
         {
             InitializeComponent();
             DoubleBuffered = true;
             Scrollable = true;
+            this.OwnerDraw = true;
+        }
+
+        protected override void OnDrawItem(DrawListViewItemEventArgs e)
+        {
+            base.OnDrawItem(e);
+            Image img;
+            ListViewItem item = e.Item;            
+            
+            bool MouseOver = item.Index == ItemIndex;
+            Font font =  item.Font;
+            
+
+            string text = /*((MouseOver) ? Environment.NewLine : "") + */item.Text;
+
+            int X = e.Bounds.X, Y = 0;
+            if (View == System.Windows.Forms.View.LargeIcon)
+            {
+                img = LargeImageList.Images[e.Item.ImageIndex];
+                X = (e.Bounds.Width - img.Width) / 2 + e.Bounds.X;
+            }
+            else
+            {
+                img = SmallImageList.Images[e.Item.ImageIndex];
+                Y = (e.Bounds.Height - img.Height) / 2 + e.Bounds.Y;
+            }
+            Rectangle imgrect = new Rectangle(X, Y, img.Width, img.Height);
+
+            // draw background
+            if (MouseOver)
+            {
+                Brush HighLight = new LinearGradientBrush(e.Bounds, DarkColor, Color.Transparent, 90.0f);
+                e.Graphics.FillRectangle(HighLight, e.Bounds);
+            }
+            if (item.Selected)
+            {
+                Brush HighLight = new LinearGradientBrush(e.Bounds, Color.FromArgb(60, Color.DodgerBlue), Color.Transparent, 90.0f);
+                e.Graphics.FillRectangle(HighLight, e.Bounds);
+            }
+            // draw icon
+            e.Graphics.DrawImage(img, imgrect);
+
+            // draw text            
+            Rectangle labelBounds = item.GetBounds(ItemBoundsPortion.Label);
+            Size textSize = e.Graphics.MeasureString(text, font).ToSize(); ;
+
+            if (!MouseOver)
+                while (true) // shorten the item text
+                {
+                    textSize = e.Graphics.MeasureString(text, font).ToSize();
+                    if (textSize.Width <= e.Bounds.Width)
+                        break;
+                    text = text.Substring(0, text.Length - 4) + "..";
+                }
+            e.Graphics.DrawString(text, font, Brushes.DodgerBlue, (e.Bounds.Width - textSize.Width) / 2 + e.Bounds.X, labelBounds.Y + ((MouseOver) ? (int)(textSize.Height*0.7) : 0));
         }
 
         #region Hide scrollbar and Disable tooltip
@@ -87,7 +143,7 @@ namespace CobToolsList
         {
             const int WM_HSCROLL = 0x114;
 
-            bool ctrl = ((GetAsyncKeyState(Keys.ControlKey) & 0x8000) == 0x8000);
+            bool ctrl = false; //  ((GetAsyncKeyState(Keys.ControlKey) & 0x8000) == 0x8000);
 
             if (e.Delta > 0)
                 if (ctrl)
@@ -110,16 +166,16 @@ namespace CobToolsList
             if (!ctrl)
             {
                 int index = ItemFromLocation(this.PointToClient(MousePosition));
-
                 if (index != -1)
                     ItemIndex = index;
-                Rectangle temprect = GetItemRect(ItemIndex);
-                if (rect != temprect)
+                if (ItemIndex != -1)
                 {
-                    rect = temprect;
-                    Invalidate();
-                    Application.DoEvents();
-                    Draw();
+                    Rectangle temprect = GetItemRect(ItemIndex);
+                    if (rect != temprect)
+                    {
+                        rect = temprect;
+                        Invalidate();
+                    }
                 }
             }
             //base.OnMouseWheel(e);
@@ -145,15 +201,12 @@ namespace CobToolsList
         [DllImport("user32.dll")]
         static extern short GetAsyncKeyState(System.Windows.Forms.Keys vKey);
         #endregion
-        protected override void OnItemSelectionChanged(ListViewItemSelectionChangedEventArgs e)
+
+        protected override void OnMouseLeave(EventArgs e)
         {
-            base.OnItemSelectionChanged(e);
-            Rectangle tempRect = GetItemRect(e.ItemIndex);
-            if (rect == tempRect)
-            {
-                Application.DoEvents();
-                Draw();
-            }
+            ItemIndex = -1;
+            rect = Rectangle.Empty;
+            Invalidate();
         }
         protected override void OnMouseEnter(EventArgs e)
         {
@@ -170,10 +223,9 @@ namespace CobToolsList
             if (tempRect != rect)
             {
                 ItemIndex = index;
+                rect = tempRect;
                 Invalidate();
                 Application.DoEvents();
-                rect = tempRect;
-                Draw();
             }
         }
 
@@ -186,13 +238,6 @@ namespace CobToolsList
                     return i;
             }
             return -1;
-        }
-
-        private void Draw()
-        {
-            Graphics g = Graphics.FromHwnd(this.Handle);
-            Brush HighLight = new LinearGradientBrush(rect, Color.FromArgb(20, Color.White), Color.Transparent, 90.0f);
-            g.FillRectangle(HighLight, rect);
         }
     }
 }

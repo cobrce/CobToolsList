@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Drawing.Drawing2D;
 
 namespace CobToolsList
 {
@@ -15,8 +16,18 @@ namespace CobToolsList
         private bool over = false;
         private bool click = false;
         private Brush Brush = Brushes.DodgerBlue;
-        private Brush overBrush = Brushes.SkyBlue;
-        private Brush clickBrush = Brushes.DeepSkyBlue;
+        private Brush overBrush = Brushes.DeepSkyBlue;
+
+        private Brush _clickBrush;
+        private Brush clickBrush
+        {
+            get
+            {
+                if (_clickBrush == null)
+                    this._clickBrush = new LinearGradientBrush(DisplayRectangle, Color.DeepSkyBlue, Color.DodgerBlue, LinearGradientMode.Vertical);
+                return _clickBrush;
+            }
+        }
         public MyButton()
         {
             InitializeComponent();
